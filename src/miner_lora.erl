@@ -247,6 +247,9 @@ handle_call({send, Payload, When, ChannelSelectorFun, DataRate, Power, IPol}, Fr
                              <<"data">> => base64:encode(Payload)
                             }
                         }),
+
+            lager:info("PULL_RESP ~p to ~p:~p", [jsx:decode(BinJSX), IP, Port]),
+
             Packet = <<?PROTOCOL_2:8/integer-unsigned, Token/binary, ?PULL_RESP:8/integer-unsigned, BinJSX/binary>>,
             maybe_mirror(State#state.mirror_socket, Packet),
             lager:debug("sending packet via channel: ~p",[LocalFreq]),
