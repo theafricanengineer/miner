@@ -104,8 +104,8 @@ init(_Args) ->
     OnionServer =
         case application:get_env(miner, radio_device, undefined) of
             {RadioBindIP, RadioBindPort, RadioSendIP, RadioSendPort} ->
-                %% check if we are overriding the region ( for lora )
-                RegionOverRide = application:get_env(miner, region_override, undefined),
+                %% check if we are overriding/forcing the region ( for lora )
+                RegionOverRide = check_for_region_override(),
                 OnionOpts = #{
                     radio_udp_bind_ip => RadioBindIP,
                     radio_udp_bind_port => RadioBindPort,
@@ -139,3 +139,18 @@ init(_Args) ->
         OnionServer ++
         [?WORKER(miner_poc_statem, [POCOpts])],
     {ok, {SupFlags, ChildSpecs}}.
+
+
+%% check if the region is being supplied to us
+%% can be supplied either via the sys config or via an optional OS env var
+%% with sys config taking priority if both exist
+check_for_region_override()->
+    check_for_region_override(application:get_env(miner, region_override, undefined)).
+
+check_for_region_override(undefined)->
+    case os:getenv("REGION_OVERRIDE") of
+        false -> undefined;
+        Region -> list_to_atom(Region)
+    end;
+check_for_region_override(SysConfigRegion)->
+    SysConfigRegion.

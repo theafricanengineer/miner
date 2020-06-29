@@ -194,7 +194,7 @@ init(Args) ->
                 ok = init_ets(),
                 erlang:send_after(5000, self(), reg_domain_timeout),
                 {false, undefined, undefined, undefined};
-            Region when is_atom(Region) ->
+            Region ->
                 lager:info("using region specifed in config: ~p", [Region]),
                 %% get the freq map from config and use Region to get our required data
                 FreqMap = application:get_env(miner, frequency_data, #{}),
@@ -203,6 +203,7 @@ init(Args) ->
                         lager:warning("specified region ~p not supported", [Region]),
                         {false, undefined, undefined};
                     FreqList ->
+                        lager:info("using freq list ~p", [FreqList]),
                         {true, Region, FreqList}
                 end
         end,
