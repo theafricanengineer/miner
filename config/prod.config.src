@@ -1,0 +1,13 @@
+%% -*- erlang -*-
+[
+ "config/sys.config",
+ {miner,
+  [
+   %% dont perform regionalised checks in dev envs
+   %% we only realy need the params below if this file is changed to specify a radio device
+   %% as without one miner_lora is not started
+   %% including the params anyway in case someone needs it in a dev env
+   {region_override, '${REGION_OVERRIDE}'}
+
+  ]}
+].
