@@ -184,8 +184,8 @@ init(Args) ->
             S
     end,
 
-    %% cloud/miner pro will never assert location and so we dont want to use regulatory domain checks for these miners
-    %% allow them to instead specify a region via an env variable and set the freq list based on this
+    %% cloud/miner pro will never assert location and so we dont  use regulatory domain checks for these miners
+    %% instead they will supply a region value, use this if it exists
     {RegDomainConfirmed, DefaultRegRegion, DefaultRegFreqList} =
         case maps:get(region_override, Args, undefined) of
             undefined ->
@@ -193,7 +193,7 @@ init(Args) ->
                 ets:new(?COUNTRY_FREQ_DATA, [named_table, public]),
                 ok = init_ets(),
                 erlang:send_after(5000, self(), reg_domain_timeout),
-                {false, undefined, undefined, undefined};
+                {false, undefined, undefined};
             Region ->
                 lager:info("using region specifed in config: ~p", [Region]),
                 %% get the freq map from config and use Region to get our required data
