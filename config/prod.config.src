@@ -3,10 +3,8 @@
  "config/sys.config",
  {miner,
   [
-   %% dont perform regionalised checks in dev envs
-   %% we only realy need the params below if this file is changed to specify a radio device
-   %% as without one miner_lora is not started
-   %% including the params anyway in case someone needs it in a dev env
+   %% allow os env var to supply the region, used mainly for miner pro
+   %% if value is undefined, miner will try to work out region based on asserted location
    {region_override, '${REGION_OVERRIDE}'}
 
   ]}
