@@ -144,9 +144,11 @@ init(_Args) ->
 %% check if the region is being supplied to us
 %% can be supplied either via the sys config or via an optional OS env var
 %% with sys config taking priority if both exist
+-spec check_for_region_override() -> atom().
 check_for_region_override()->
     check_for_region_override(application:get_env(miner, region_override, undefined)).
 
+-spec check_for_region_override(atom()) -> atom().
 check_for_region_override(undefined)->
     case os:getenv("REGION_OVERRIDE") of
         false -> undefined;
